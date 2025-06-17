@@ -1,0 +1,14 @@
+different approaches to burst extraction
+    - flooding: threshold, find overlapping
+    - fit 2d gaussian: difficulty is finding the right initial parameters; might also take too much time
+        - could use findpeaks across x and y to find initial mu
+            - does find smaller peaks in between...
+            - using these values as initial mu doesn't yield the correct gaussians
+
+        - fit gaussian mixture model using lsqcurvefit!!!
+            - restrict mus of peaks found by findpeaks
+            - function is a combination of the gauss2drot function
+
+to find peaks, do a lowering threshold algorithm
+    if two clusters merge then fit gaussian to a very defined neighbourhood just before they merge
+        how to find merges: have a list of the brightest pixel per cluster, check when it disappears
