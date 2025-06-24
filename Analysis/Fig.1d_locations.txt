@@ -1,0 +1,37 @@
+#get positions
+patterns=[R12041[0-6],
+          (R12041[7-9]|R1204[2-3][0-9]|R120501),
+          (R12050[2-9]|R12051[0-1]),
+          (R12051[2-9]|R1205[2-3][0-9]|R120601),
+          (W12090[4-9]|W12091[0-6]),
+          (W12091[7-9]|W120920),
+          (W12092[1-9]|W120930|W1210[0-9][0-9])]
+poss=[[ (0,4), (1,4), (0,1), (1,1), (1,-2), (0,-2), (0,-5), (1,-5)],
+      [ (1,3), (2,3), (1,0), (2,0), (1,-3), (2,-3), (1,-5), (2,-5)],
+      [ (2,4), (3,4), (2,1), (3,1), (2,-2), (3,-2), (2,-4), (3,-4)],
+      [ (2,2), (1,2), (2,-1), (1,-1), (-1,2), (-2,2), (-1,-1), (-2,-1)],
+      [ (-4,4), (-3,4), (-4,1), (-3,1), (-4,-2), (-3,-2), (-4,-5), (-3,-5)],
+      [ (-2,-1), (-1,-1), (-2,-4), (-1,-4), (1,-2), (2,-2), (1,-4), (2,-4)],
+      [ (-6,3), (-5,3), (-6,1), (-5,1), (-6,-2), (-5,-2), (-6,-4), (-5,-4)]]
+import re
+def findpos(nrn):
+    gridn=-1
+    for i in range(7):
+        if re.match(patterns[i],nrn[Session]): gridn=i
+    ch=int(nrn[name][5])-1
+    #print(gridn,ch)
+    return(poss[gridn][ch])
+for nrn in nrn_del:
+    nrn[pos]=findpos(nrn)
+x=[x[pos][0]for x in nrn_del]
+y=[x[pos][1]for x in nrn_del]
+posRunique=np.unique(np.array(poss[:4]).reshape(4*8,2),axis=0)
+posWunique=np.unique(np.array(poss[4:]).reshape(3*8,2),axis=0)
+isRudi=[x[Session][0]==R for x in nrn_del]
+isWeb=[x[Session][0]==W for x in nrn_del]
+Rdorsal=np.array([1,3,7,15,16,25,26,30])
+RlocD=np.zeros(31,dtype=bool)
+RlocD[Rdorsal]=True
+Wdorsal=np.array([3,7,11,15])
+WlocD=np.zeros(24,dtype=bool)
+WlocD[Wdorsal]=True
